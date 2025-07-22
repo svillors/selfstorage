@@ -1,0 +1,30 @@
+from django.contrib import admin
+from warehouse_app.models import Warehouse, Box, Order
+
+
+class BoxesInline(admin.TabularInline):
+    model = Box
+    extra = 0
+    fields = ['size', 'price', 'is_busy']
+
+
+@admin.register(Warehouse)
+class WarehouseAdmin(admin.ModelAdmin):
+    list_display = ['city', 'address', 'free_boxes_count_display']
+    inlines = [BoxesInline]
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        for box in obj.boxes.all():
+            if not box.orders.exists():
+                box.is_busy = False
+                box.save(update_fields=['is_busy'])
+
+    def free_boxes_count_display(self, obj):
+        return obj.free_boxes_count
+    free_boxes_count_display.short_description = "Свободных боксов"
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['box', 'date_start', 'date_end']
