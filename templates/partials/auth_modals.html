@@ -10,10 +10,32 @@
 				<form method="post" action="{% url 'register' %}" class="d-flex flex-column align-items-center" style="max-width: 420px">
 					{% csrf_token %}
 					<h1 class="modal-title text-center fw-bold mb-3">Регистрация</h1>
-					<input type="email" name="email" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="E-mail">
-					<input type="text" name="username" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="Имя пользователя">
-					<input type="password" name="password1" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="Пароль">
-					<input type="password" name="password2" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="Подтвердите пароль">
+					<div class="w-100 mb-4">
+                        {{ form.email }}
+                        {% for error in form.email.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+					<div class="w-100 mb-4">
+                        {{ form.username }}
+                        {% for error in form.username.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+					<div class="w-100 mb-4">
+                        {{ form.password1 }}
+                        {% for error in form.password1.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+					<div class="w-100 mb-4">
+                        {{ form.password2 }}
+                        <ul>
+						{% for error in form.password2.errors %}
+                            <li><small class="text-danger">{{ error }}</small></li>
+                        {% endfor %}
+						</ul>
+                    </div>
 					<span class="fw-light SelfStorage_grey">Нажимая на кнопку, вы подтверждаете <a href="#">согласие на обработку данных</a></span>
 					<button type="submit" class="btn w-100 mt-4 mb-2 text-white fs_24 SelfStorage__bg_orange">Зарегистрироваться</button>
 					<span>Уже есть аккаунт? <a href="#" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#SignModal" data-bs-dismiss="modal">Войти</a></span>

@@ -10,6 +10,14 @@
 	<title>SelfStorage</title>
 </head>
 {% include "partials/auth_modals.html" %}
+{% if show_modal %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var regModal = new bootstrap.Modal(document.getElementById('RegModal'));
+        regModal.show();
+    });
+</script>
+{% endif %}
 <body>
 <header class="navbar navbar-expand-xl navbar-light fixed-top bg-white py-5">
 	<nav class="container">

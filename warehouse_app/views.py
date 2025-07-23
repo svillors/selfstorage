@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import RegisterForm, LoginForm
 
+
 def index(request):
-    return render(request, 'index.html')
+    form = RegisterForm()
+    return render(request, 'index.html', {'form': form})
 
 
 def faq(request):
@@ -21,8 +23,11 @@ def register_view(request):
             user = form.save()
             login(request, user)
             return redirect('index')
-    return redirect('index')
-
+        else:
+            return render(request, 'index.html', {'form': form, 'show_modal': True})
+    else:
+        form = RegisterForm()
+    return render(request, 'index.html', {'form': form})
 
 
 def login_view(request):
