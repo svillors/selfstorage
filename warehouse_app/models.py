@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models.fields import PositiveSmallIntegerField
 from django.utils.timezone import now
 from django.db.models import Min
 
@@ -66,12 +67,10 @@ class Warehouse(models.Model):
 
 
 class Box(models.Model):
-    size_choices = (
-        ('LT3', 'До 3 м²'),
-        ('LT10', 'До 10 м²'),
-        ('GT10', 'От 10 м²')
+    name = models.CharField(
+        'Имя бокса',
+        max_length=10,
     )
-
     warehouse = models.ForeignKey(
         Warehouse,
         verbose_name='Склад',
@@ -83,18 +82,40 @@ class Box(models.Model):
         max_digits=10,
         decimal_places=2
     )
-    size = models.CharField(
-        'Размер бокса',
-        max_length=4,
-        choices=size_choices
+    length = PositiveSmallIntegerField(
+        'Длина'
+    )
+    width = PositiveSmallIntegerField(
+        'Ширина'
+    )
+    height = PositiveSmallIntegerField(
+        'Высота'
+    )
+    floor = PositiveSmallIntegerField(
+        'Этаж'
     )
     is_busy = models.BooleanField(
         'Занят ли бокс',
         default=False
     )
 
+    @property
+    def size(self):
+        size = self.length * self.width * self.height
+        return size
+
+    @property
+    def box_size(self):
+        if self.size < 3:
+            box_size = 'До 3 м²'
+        elif self.size < 10:
+            box_size = 'До 10 м²'
+        else:
+            box_size = 'От 10 м²'
+        return box_size
+
     def __str__(self):
-        return f'бокс {self.get_size_display()}, {self.warehouse}'
+        return f'бокс {self.volume}, {self.warehouse}'
 
     class Meta:
         verbose_name = 'Бокс'

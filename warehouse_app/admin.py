@@ -5,7 +5,7 @@ from warehouse_app.models import Warehouse, Box, Order
 class BoxesInline(admin.TabularInline):
     model = Box
     extra = 0
-    fields = ['size', 'price', 'is_busy']
+    fields = ['name', 'price', 'length', 'width', 'height', 'floor', 'is_busy']
 
 
 @admin.register(Warehouse)
@@ -28,3 +28,8 @@ class WarehouseAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['box', 'date_start', 'date_end']
+
+
+@admin.register(Box)
+class BoxAdmin(admin.ModelAdmin):
+    list_display = ['name', 'price', 'size', 'box_size', 'is_busy']
