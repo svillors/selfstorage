@@ -1,0 +1,65 @@
+{% load static %}
+<!-- РЕГИСТРАЦИЯ -->
+<aside class="modal fade" id="RegModal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+		<div class="modal-content">
+			<div class="modal-header border-0">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex justify-content-center align-items-center">
+				<form method="post" action="{% url 'register' %}" class="d-flex flex-column align-items-center" style="max-width: 420px">
+					{% csrf_token %}
+					<h1 class="modal-title text-center fw-bold mb-3">Регистрация</h1>
+					<input type="email" name="email" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="E-mail">
+					<input type="text" name="username" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="Имя пользователя">
+					<input type="password" name="password1" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="Пароль">
+					<input type="password" name="password2" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="Подтвердите пароль">
+					<span class="fw-light SelfStorage_grey">Нажимая на кнопку, вы подтверждаете <a href="#">согласие на обработку данных</a></span>
+					<button type="submit" class="btn w-100 mt-4 mb-2 text-white fs_24 SelfStorage__bg_orange">Зарегистрироваться</button>
+					<span>Уже есть аккаунт? <a href="#" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#SignModal" data-bs-dismiss="modal">Войти</a></span>
+				</form>
+			</div>
+		</div>
+	</div>
+</aside>
+
+<!-- ВХОД -->
+<aside class="modal fade" id="SignModal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+		<div class="modal-content">
+			<div class="modal-header border-0">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex justify-content-center align-items-center">
+				<form method="post" action="{% url 'login' %}" class="d-flex flex-column align-items-center" style="max-width: 420px">
+					{% csrf_token %}
+					<h1 class="modal-title text-center fw-bold mb-3">Вход</h1>
+					<input type="text" name="username" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="E-mail / Имя пользователя">
+					<input type="password" name="password" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="Пароль">
+					<a href="#" class="SelfStorage_orange mb-3" data-bs-toggle="modal" data-bs-target="#ForgetModal" data-bs-dismiss="modal">Забыли пароль?</a>
+					<button type="submit" class="btn w-100 mb-3 text-white fs_24 SelfStorage__bg_orange">Войти</button>
+					<span>Нет аккаунта? <a href="#" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#RegModal" data-bs-dismiss="modal">Регистрация</a></span>
+				</form>
+			</div>
+		</div>
+	</div>
+</aside>
+
+<!-- ВОССТАНОВЛЕНИЕ -->
+<aside class="modal fade" id="ForgetModal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+		<div class="modal-content">
+			<div class="modal-header border-0">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex justify-content-center align-items-center">
+				<form class="d-flex flex-column align-items-center" style="max-width: 420px">
+					<h1 class="modal-title text-center fw-bold mb-3">Восстановление пароля</h1>
+					<input type="email" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="E-mail">
+					<button type="submit" class="btn w-100 mb-3 text-white fs_24 SelfStorage__bg_orange">Восстановить</button>
+					<span>Вспомнили пароль? <a href="#" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#SignModal" data-bs-dismiss="modal">Вернуться</a></span>
+				</form>
+			</div>
+		</div>
+	</div>
+</aside>
