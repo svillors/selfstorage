@@ -121,7 +121,7 @@ class Box(models.Model):
         return box_size
 
     def __str__(self):
-        return f'бокс {self.size}, {self.warehouse}'
+        return f'{self.name}, Размер: {self.size}, Склад: {self.warehouse}'
 
     class Meta:
         verbose_name = 'Бокс'
@@ -161,3 +161,23 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+
+
+class Stuff(models.Model):
+    name = models.CharField(
+        'Наименование',
+        max_length=200,
+    )
+    order = models.ForeignKey(
+        Order,
+        verbose_name='Заказ',
+        related_name='stuffs',
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return f'Заказ {self.order}'
+
+    class Meta:
+        verbose_name = 'Вещь'
+        verbose_name_plural = 'Вещи'
