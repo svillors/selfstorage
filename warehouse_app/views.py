@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate, logout
+from .forms import RegisterForm, LoginForm
 
 def index(request):
     return render(request, 'index.html')
@@ -10,3 +12,28 @@ def faq(request):
 
 def boxes(request):
     return render(request, 'boxes.html')
+
+
+def register_view(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')
+    return redirect('index')
+
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            return redirect('index')
+    return redirect('index')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')
