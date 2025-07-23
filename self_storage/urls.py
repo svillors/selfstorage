@@ -19,6 +19,7 @@ from django.urls import path
 from warehouse_app import views
 from django.conf import settings
 from django.conf.urls.static import static
+from promo.views import tracked_redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('promo/<slug:slug>/', tracked_redirect, name='tracked_redirect')
 ]
 
 
