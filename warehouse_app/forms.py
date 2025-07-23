@@ -4,7 +4,22 @@ from django.contrib.auth.models import User
 
 
 class RegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
+        'class': 'form-control border-8 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
+        'placeholder': 'E-mail'
+    }))
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control border-8 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
+        'placeholder': 'Имя пользователя'
+    }))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control border-8 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
+        'placeholder': 'Пароль'
+    }))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control border-8 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
+        'placeholder': 'Подтвердите пароль'
+    }))
 
     class Meta:
         model = User
