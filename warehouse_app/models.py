@@ -3,9 +3,14 @@ from django.contrib.auth import get_user_model
 from django.db.models.fields import PositiveSmallIntegerField
 from django.utils.timezone import now
 from django.db.models import Min
+from pathlib import PurePath
 
 
 User = get_user_model()
+
+
+def get_directory_path(instance, filename):
+    return PurePath(f'{instance.city}', f'{filename}')
 
 
 class Warehouse(models.Model):
@@ -44,6 +49,7 @@ class Warehouse(models.Model):
     )
     image = models.ImageField(
         'Фото склада',
+        upload_to=get_directory_path,
         blank=True,
         null=True
     )
@@ -115,7 +121,7 @@ class Box(models.Model):
         return box_size
 
     def __str__(self):
-        return f'бокс {self.volume}, {self.warehouse}'
+        return f'бокс {self.size}, {self.warehouse}'
 
     class Meta:
         verbose_name = 'Бокс'
