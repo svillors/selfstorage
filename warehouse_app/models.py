@@ -2,9 +2,14 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
 from django.db.models import Min
+from pathlib import PurePath
 
 
 User = get_user_model()
+
+
+def get_directory_path(instance, filename):
+    return PurePath(f'{instance.city}', f'{filename}')
 
 
 class Warehouse(models.Model):
@@ -43,6 +48,7 @@ class Warehouse(models.Model):
     )
     image = models.ImageField(
         'Фото склада',
+        upload_to=get_directory_path,
         blank=True,
         null=True
     )
@@ -66,12 +72,15 @@ class Warehouse(models.Model):
 
 
 class Box(models.Model):
+    name = models.CharField(
+        'Имя бокса',
+        max_length=10,
+    )
     size_choices = (
         ('LT3', 'До 3 м²'),
         ('LT10', 'До 10 м²'),
         ('GT10', 'От 10 м²')
     )
-
     warehouse = models.ForeignKey(
         Warehouse,
         verbose_name='Склад',
@@ -94,7 +103,7 @@ class Box(models.Model):
     )
 
     def __str__(self):
-        return f'бокс {self.get_size_display()}, {self.warehouse}'
+        return f'{self.name}, {self.get_size_display()}, {self.warehouse}'
 
     class Meta:
         verbose_name = 'Бокс'
@@ -134,3 +143,23 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+
+
+class Stuff(models.Model):
+    name = models.CharField(
+        'Наименование',
+        max_length=40,
+    )
+    order = models.ForeignKey(
+        Order,
+        verbose_name='Заказ',
+        related_name='stuffs',
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return f'Заказ {self.order}'
+
+    class Meta:
+        verbose_name = 'Вещь'
+        verbose_name_plural = 'Вещи'
