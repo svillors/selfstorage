@@ -113,11 +113,11 @@ class Box(models.Model):
     @property
     def box_size(self):
         if self.size < 3:
-            box_size = 'До 3 м²'
+            box_size = 'До 3 м³'
         elif self.size < 10:
-            box_size = 'До 10 м²'
+            box_size = 'До 10 м³'
         else:
-            box_size = 'От 10 м²'
+            box_size = 'От 10 м³'
         return box_size
 
     def __str__(self):
