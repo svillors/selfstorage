@@ -128,6 +128,24 @@ class Box(models.Model):
         verbose_name_plural = 'Боксы'
 
 
+class Courier(models.Model):
+    name = models.CharField(
+        'Имя',
+        max_length=40,
+    )
+    phone = models.CharField(
+        'Телефон',
+        max_length=20,
+    )
+
+    def __str__(self):
+        return f'{self.name},{self.phone}'
+
+    class Meta:
+        verbose_name = 'Курьер'
+        verbose_name_plural = 'Курьеры'
+
+
 class Order(models.Model):
     customer = models.ForeignKey(
         User,
@@ -147,6 +165,14 @@ class Order(models.Model):
     )
     date_end = models.DateField(
         'Дата конца аренды',
+    )
+    courier = models.ForeignKey(
+        Courier,
+        verbose_name='Курьер',
+        related_name='active_orders',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
     )
 
     def __str__(self):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from warehouse_app.models import Warehouse, Box, Order, Stuff
+from warehouse_app.models import Warehouse, Box, Order, Stuff, Courier
 
 
 class BoxesInline(admin.TabularInline):
@@ -48,3 +48,8 @@ class BoxAdmin(admin.ModelAdmin):
 @admin.register(Stuff)
 class StuffAdmin(admin.ModelAdmin):
     list_display = ['name']
+
+
+@admin.register(Courier)
+class CourierAdmin(admin.ModelAdmin):
+    list_display = ['name','phone']
