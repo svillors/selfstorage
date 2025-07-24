@@ -11,27 +11,27 @@
 					{% csrf_token %}
 					<h1 class="modal-title text-center fw-bold mb-3">Регистрация</h1>
 					<div class="w-100 mb-4">
-                        {{ form.email }}
-                        {% for error in form.email.errors %}
+                        {{ register_form.email }}
+                        {% for error in register_form.email.errors %}
                             <small class="text-danger">{{ error }}</small>
                         {% endfor %}
                     </div>
 					<div class="w-100 mb-4">
-                        {{ form.username }}
-                        {% for error in form.username.errors %}
+                        {{ register_form.username }}
+                        {% for error in register_form.username.errors %}
                             <small class="text-danger">{{ error }}</small>
                         {% endfor %}
                     </div>
 					<div class="w-100 mb-4">
-                        {{ form.password1 }}
-                        {% for error in form.password1.errors %}
+                        {{ register_form.password1 }}
+                        {% for error in register_form.password1.errors %}
                             <small class="text-danger">{{ error }}</small>
                         {% endfor %}
                     </div>
 					<div class="w-100 mb-4">
-                        {{ form.password2 }}
+                        {{ register_form.password2 }}
                         <ul>
-						{% for error in form.password2.errors %}
+						{% for error in register_form.password2.errors %}
                             <li><small class="text-danger">{{ error }}</small></li>
                         {% endfor %}
 						</ul>
@@ -56,8 +56,27 @@
 				<form method="post" action="{% url 'login' %}" class="d-flex flex-column align-items-center" style="max-width: 420px">
 					{% csrf_token %}
 					<h1 class="modal-title text-center fw-bold mb-3">Вход</h1>
-					<input type="text" name="username" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="E-mail / Имя пользователя">
-					<input type="password" name="password" required class="form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey" placeholder="Пароль">
+					<div class="w-100 mb-4">
+						{{ login_form.identifier }}
+						{% for error in login_form.identifier.errors %}
+							<small class="text-danger">{{ error }}</small>
+						{% endfor %}
+					</div>
+				
+					<div class="w-100 mb-4">
+						{{ login_form.password }}
+						{% for error in login_form.password.errors %}
+							<small class="text-danger">{{ error }}</small>
+						{% endfor %}
+					</div>
+				
+					{% if login_form.non_field_errors %}
+						<div class="alert alert-danger w-100">
+							{% for error in login_form.non_field_errors %}
+								<div>{{ error }}</div>
+							{% endfor %}
+						</div>
+					{% endif %}
 					<a href="#" class="SelfStorage_orange mb-3" data-bs-toggle="modal" data-bs-target="#ForgetModal" data-bs-dismiss="modal">Забыли пароль?</a>
 					<button type="submit" class="btn w-100 mb-3 text-white fs_24 SelfStorage__bg_orange">Войти</button>
 					<span>Нет аккаунта? <a href="#" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#RegModal" data-bs-dismiss="modal">Регистрация</a></span>
