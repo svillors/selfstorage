@@ -10,11 +10,18 @@
 	<title>SelfStorage</title>
 </head>
 {% include "partials/auth_modals.html" %}
-{% if show_modal %}
+{% if show_login_modal %}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var regModal = new bootstrap.Modal(document.getElementById('RegModal'));
-        regModal.show();
+        new bootstrap.Modal(document.getElementById('SignModal')).show();
+    });
+</script>
+{% endif %}
+
+{% if show_reg_modal %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new bootstrap.Modal(document.getElementById('RegModal')).show();
     });
 </script>
 {% endif %}
