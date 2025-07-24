@@ -26,5 +26,12 @@ class RegisterForm(UserCreationForm):
         fields = ['email', 'username', 'password1', 'password2']
 
 
-class LoginForm(AuthenticationForm):
-    username = forms.CharField(label='Email / Username')
+class LoginForm(forms.Form):
+    identifier = forms.CharField(widget=forms.TextInput(attrs={
+        'class': "form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey",
+        'placeholder': 'E-mail / Имя пользователя'
+    }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
+        'placeholder': 'Пароль'
+    }))
