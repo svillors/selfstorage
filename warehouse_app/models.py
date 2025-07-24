@@ -139,7 +139,7 @@ class Courier(models.Model):
     )
 
     def __str__(self):
-        return f'{self.name},{self.phone}'
+        return f'{self.name}, {self.phone}'
 
     class Meta:
         verbose_name = 'Курьер'
@@ -207,3 +207,20 @@ class Stuff(models.Model):
     class Meta:
         verbose_name = 'Вещь'
         verbose_name_plural = 'Вещи'
+
+
+class Promo(models.Model):
+    code = models.CharField(
+        'Промокод',
+        max_length=10,
+    )
+    discount = PositiveSmallIntegerField(
+        'Размер скидки'
+    )
+
+    def __str__(self):
+        return f'{self.code}, {self.discount}'
+
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'
