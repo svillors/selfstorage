@@ -31,10 +31,13 @@ class OrderAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        for order in Order.objects.select_related('box').all():
-            if order.box.orders.exists():
-                order.box.is_busy = True
-                order.box.save(update_fields=['is_busy'])
+        for box in Box.objects.prefetch_related('orders').all():
+            if not box.orders.all().exists():
+                box.is_busy = False
+                box.save(update_fields=['is_busy'])
+            else:
+                box.is_busy = True
+                box.save(update_fields=['is_busy'])
 
 
 @admin.register(Box)
