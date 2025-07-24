@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
+from warehouse_app.models import Warehouse
 from .forms import RegisterForm, LoginForm
 
 
@@ -39,7 +40,8 @@ def faq(request):
 
 
 def boxes(request):
-    return render(request, 'boxes.html')
+    warehouses = Warehouse.objects.prefetch_related('boxes').all()
+    return render(request, 'boxes.html', {'warehouses': warehouses})
 
 
 def register_view(request):
