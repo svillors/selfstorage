@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models.fields import PositiveSmallIntegerField
 from django.utils.timezone import now
-from django.db.models import Min
+from django.db.models import Min, Max
 from pathlib import PurePath
 
 
@@ -77,6 +77,12 @@ class Warehouse(models.Model):
         free_boxes = self.boxes.filter(is_busy=False).count()
         return free_boxes
 
+    @property
+    def max_height(self):
+        max_height = self.boxes.aggregate(
+            max_height=Max('height'))['max_height']
+        return max_height if max_height else 0
+
     class Meta:
         verbose_name = 'Склад'
         verbose_name_plural = 'Склады'
@@ -117,17 +123,17 @@ class Box(models.Model):
 
     @property
     def size(self):
-        size = self.length * self.width * self.height
+        size = self.length * self.width
         return size
 
     @property
     def box_size(self):
         if self.size < 3:
-            box_size = 'До 3 м³'
+            box_size = 'До 3 м²'
         elif self.size < 10:
-            box_size = 'До 10 м³'
+            box_size = 'До 10 м²'
         else:
-            box_size = 'От 10 м³'
+            box_size = 'От 10 м²'
         return box_size
 
     def __str__(self):

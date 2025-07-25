@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import RegisterForm, LoginForm, ProfileForm
-from .models import Profile
+from warehouse_app.models import Warehouse
+from .forms import RegisterForm, LoginForm
 
 
 def index(request):
@@ -41,7 +40,8 @@ def faq(request):
 
 
 def boxes(request):
-    return render(request, 'boxes.html')
+    warehouses = Warehouse.objects.prefetch_related('boxes').all()
+    return render(request, 'boxes.html', {'warehouses': warehouses})
 
 
 def register_view(request):
@@ -89,25 +89,3 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
-
-
-@login_required
-def profile_view(request):
-    user = request.user
-    try:
-        profile = user.profile
-    except:
-        profile = Profile.objects.create(user=user)
-
-    if request.method == "POST":
-        form = ProfileForm(request.POST, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('my-rent')
-    else:
-        form = ProfileForm(instance=profile)
-
-    return render(request, 'my-rent.html', {
-        'user': user,
-        'profile': form,
-        })
