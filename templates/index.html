@@ -48,7 +48,7 @@
 				</li>
 				{% if request.user.is_authenticated %}
 	                <li class="nav-item me-5 d-flex align-items-center">
-		                <a href="#" class="btn btn-outline-secondary me-3">Профиль</a>
+		                <a href="{% url 'my-rent' %}" class="btn btn-outline-secondary me-3">Профиль</a>
 		                <form method="post" action="{% url 'logout' %}">
 			                {% csrf_token %}
 			                <button type="submit" class="btn btn-outline-danger btn-sm">Выйти</button>

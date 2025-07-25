@@ -9,6 +9,16 @@ from pathlib import PurePath
 User = get_user_model()
 
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=20, blank=True)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+
+    def __str__(self):
+        return f'Профиль {self.user.username}'
+
+
 def get_directory_path(instance, filename):
     return PurePath(f'{instance.city}', f'{filename}')
 

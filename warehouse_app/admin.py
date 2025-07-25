@@ -1,5 +1,5 @@
 from django.contrib import admin
-from warehouse_app.models import Warehouse, Box, Order, Stuff, Courier, Promo
+from warehouse_app.models import Warehouse, Box, Order, Stuff, Courier, Promo, Profile
 
 
 class BoxesInline(admin.TabularInline):
@@ -58,3 +58,8 @@ class CourierAdmin(admin.ModelAdmin):
 @admin.register(Promo)
 class PromoAdmin(admin.ModelAdmin):
     list_display = ['code', 'discount']
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ['user']
