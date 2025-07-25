@@ -212,6 +212,11 @@ class Order(models.Model):
         'Предметы',
         blank=True
     )
+    phone = models.CharField(
+        'Номер телефона',
+        blank=True,
+        max_length=30
+    )
 
     def __str__(self):
         return f'Заказ на {self.box} от {self.customer}'
