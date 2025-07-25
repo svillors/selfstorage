@@ -29,7 +29,8 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
-    path('promo/<slug:slug>/', tracked_redirect, name='tracked_redirect')
+    path('promo/<slug:slug>/', tracked_redirect, name='tracked_redirect'),
+    path('qr_code/', views.qr_code, name='qr_code'),
 ]
 
 

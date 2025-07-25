@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from warehouse_app.models import Warehouse
+
+from warehouse_app.models import Order
 from .forms import RegisterForm, LoginForm
 
 
@@ -89,3 +91,8 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+
+def qr_code(request):
+    order = request.order
+    return render(request, 'qr_code.html', {'qr_code': order.qr_code.url})
