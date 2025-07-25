@@ -79,9 +79,9 @@
 			Аренда бокса на любой срок<br>Бесплатная доставка от вашего дома
 		  </h4>
 		  <form>
-			  <input type="email" required name="email" class="form-control border-8 mb-3 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail">
+			  <input type="email" required name="email" class="form-control border-8 mb-3 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail" value="{{ request.user.email }}">
 			  
-			  <input type="tel" required name="phone" class="form-control border-8 mb-4 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Укажите ваш номер телефона">
+			  <input type="tel" required name="phone" class="form-control border-8 mb-4 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Укажите ваш номер телефона" value="{{ request.user.profile.phone }}">
 			  
 			  <div class="mb-4">
 				  <label for="selectedBox" class="form-label fs_20">Выберите бокс</label>
