@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from .models import Profile
 
 
 class RegisterForm(UserCreationForm):
@@ -35,3 +36,14 @@ class LoginForm(forms.Form):
         'class': 'form-control border-8 mb-4 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
         'placeholder': 'Пароль'
     }))
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['first_name', 'last_name', 'phone']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control fs_24 ps-2 SelfStorage__input'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control fs_24 ps-2 SelfStorage__input'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control fs_24 ps-2 SelfStorage__input'}),
+        }

@@ -10,6 +10,21 @@
 	<title>Boxes</title>
 </head>
 {% include "partials/auth_modals.html" %}
+{% if show_login_modal %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new bootstrap.Modal(document.getElementById('SignModal')).show();
+    });
+</script>
+{% endif %}
+
+{% if show_reg_modal %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new bootstrap.Modal(document.getElementById('RegModal')).show();
+    });
+</script>
+{% endif %}
 <body>
 <header class="navbar navbar-expand-xl navbar-light fixed-top bg-white py-5">
 	<nav class="container">
@@ -33,7 +48,7 @@
 				</li>
 				{% if request.user.is_authenticated %}
 	                <li class="nav-item me-5 d-flex align-items-center">
-		                <a href="#" class="btn btn-outline-secondary me-3">Профиль</a>
+		                <a href="{% url 'my-rent' %}" class="btn btn-outline-secondary me-3">Профиль</a>
 		                <form method="post" action="{% url 'logout' %}">
 			                {% csrf_token %}
 			                <button type="submit" class="btn btn-outline-danger btn-sm">Выйти</button>

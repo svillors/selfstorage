@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from warehouse_app.models import Warehouse
-
-from warehouse_app.models import Order
-from .forms import RegisterForm, LoginForm
+from warehouse_app.models import Warehouse, Profile
+from .forms import RegisterForm, LoginForm, ProfileForm
 
 
 def index(request):
@@ -93,6 +92,23 @@ def logout_view(request):
     return redirect('index')
 
 
-def qr_code(request):
-    order = request.order
-    return render(request, 'qr_code.html', {'qr_code': order.qr_code.url})
+@login_required
+def profile_view(request):
+    user = request.user
+    try:
+        profile = user.profile
+    except:
+        profile = Profile.objects.create(user=user)
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('my-rent')
+    else:
+        form = ProfileForm(instance=profile)
+
+    return render(request, 'my-rent.html', {
+        'user': user,
+        'profile': form,
+        })
