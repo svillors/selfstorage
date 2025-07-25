@@ -110,8 +110,10 @@ class Box(models.Model):
     width = PositiveSmallIntegerField(
         'Ширина'
     )
-    height = PositiveSmallIntegerField(
-        'Высота'
+    height = models.DecimalField(
+        'Высота',
+        max_digits=4,
+        decimal_places=1,
     )
     floor = PositiveSmallIntegerField(
         'Этаж'
