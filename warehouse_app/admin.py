@@ -28,6 +28,7 @@ class WarehouseAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     inlines = [StuffInline]
     list_display = ['box', 'date_start', 'date_end']
+    readonly_fields = ('qr_code',)
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)

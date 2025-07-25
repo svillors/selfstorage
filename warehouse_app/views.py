@@ -112,3 +112,8 @@ def profile_view(request):
         'user': user,
         'profile': form,
         })
+
+
+def qr_code(request):
+    order = request.order
+    return render(request, 'qr_code.html', {'qr_code': order.qr_code.url})

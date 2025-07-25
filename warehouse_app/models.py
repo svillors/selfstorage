@@ -1,5 +1,11 @@
+import io
+import random
+import segno
+import string
+
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.files.base import File
 from django.db.models.fields import PositiveSmallIntegerField
 from django.utils.timezone import now
 from django.db.models import Min, Max
@@ -192,6 +198,11 @@ class Order(models.Model):
         blank=True,
         on_delete=models.SET_NULL
     )
+    qr_code = models.ImageField(
+        'QR-код',
+        upload_to='qr_codes',
+        blank=True
+    )
 
     def __str__(self):
         return f'Заказ на {self.box} от {self.customer}'
@@ -201,6 +212,17 @@ class Order(models.Model):
         today = now().date()
         delta = self.date_end - today
         return delta
+
+
+    def save(self, *args, **kwargs):
+        random_text = ''.join([random.choice(string.ascii_letters + string.digits)
+                for i in range(10)])
+        name = f'{self.box}{random_text}'
+        qr = segno.make_qr(name)
+        buffer = io.BytesIO()
+        qr.save(buffer, kind='png', scale=3, dark='darkblue')
+        self.qr_code.save(name + '.png', File(buffer), save=False)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Заказ'
