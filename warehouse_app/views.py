@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from dateutil.relativedelta import relativedelta
+from django.utils.timezone import now
 from django.contrib.auth.models import User
-from warehouse_app.models import Warehouse, Profile
+from warehouse_app.models import Warehouse, Profile, Order, Box
 from .forms import RegisterForm, LoginForm, ProfileForm
 
 
@@ -117,3 +119,27 @@ def profile_view(request):
 def qr_code(request):
     order = request.order
     return render(request, 'qr_code.html', {'qr_code': order.qr_code.url})
+
+
+def create_order(request):
+    email = request.POST.get('email')
+    user = User.objects.get(email=email)
+    phone = request.POST.get('phone')
+    selected_box = request.POST.get('selected_box')
+    box = Box.objects.filter(name=selected_box).first()
+    address = request.POST.get('address') or None
+    items = request.POST.get('items') or None
+
+    rental_period = int(request.POST.get('rental_period', 1))
+    date_end = now().date() + relativedelta(months=rental_period)
+
+    Order.objects.create(
+        customer=user,
+        box=box,
+        address=address,
+        items=items,
+        date_end=date_end,
+        phone=phone
+    )
+
+    return redirect('index')

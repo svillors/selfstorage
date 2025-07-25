@@ -78,15 +78,25 @@
 		  <h4 class="fw-lighter SelfStorage_grey mb-5">
 			Аренда бокса на любой срок<br>Бесплатная доставка от вашего дома
 		  </h4>
-		  <form>
-			  <input type="email" required name="email" class="form-control border-8 mb-3 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail" value="{{ request.user.email }}">
+		  <form method="post" action="{% url 'create_order' %}">
+			{% csrf_token %}
+			  <input type="email" required name="email" class="form-control border-8 mb-3 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail" required value="{{ request.user.email }}">
 			  
-			  <input type="tel" required name="phone" class="form-control border-8 mb-4 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Укажите ваш номер телефона" value="{{ request.user.profile.phone }}">
+			  <input type="tel" required name="phone" class="form-control border-8 mb-4 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Укажите ваш номер телефона" required value="{{ request.user.profile.phone }}">
 			  
 			  <div class="mb-4">
 				  <label for="selectedBox" class="form-label fs_20">Выберите бокс</label>
 				  <input type="text" id="selectedBox" name="selected_box" class="form-control border-8 py-3 px-4 border-0 fs_20 SelfStorage__bg_lightgrey"
 						 placeholder="Нажмите, чтобы выбрать бокс" readonly style="cursor: pointer;">
+			  </div>
+
+			  <div class="mb-4">
+				<label for="rentalPeriod" class="form-label fs_20">Срок аренды</label>
+				<select id="rentalPeriod" name="rental_period" class="form-select border-8 py-3 px-4 border-0 fs_20 SelfStorage__bg_lightgrey">
+				  <option value="1">1 месяц</option>
+				  <option value="6">6 месяцев</option>
+				  <option value="12">1 год</option>
+				</select>
 			  </div>
 
 			  <div class="form-check form-switch mb-3 d-flex align-items-center gap-3">
@@ -265,7 +275,7 @@
 							 id="pills-all-{{ warehouse.id }}" 
 							 role="tabpanel" aria-labelledby="pills-all-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
-                                <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink">
+                                <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
                                     <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                         <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
                                         <span class="fs_24">№{{ box.name }}</span>
@@ -292,7 +302,7 @@
 							role="tabpanel" aria-labelledby="pills-to3-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
                                 {% if box.box_size == 'До 3 м²' %}
-                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink">
+                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
                                         <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                             <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
                                             <span class="fs_24">№{{ box.name }}</span>
@@ -320,7 +330,7 @@
 						role="tabpanel" aria-labelledby="pills-to10-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
                                 {% if box.box_size == 'До 10 м²' %}
-                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink">
+                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
                                         <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                             <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
                                             <span class="fs_24">№{{ box.name }}</span>
@@ -348,7 +358,7 @@
 							role="tabpanel" aria-labelledby="pills-from10-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
                                 {% if box.box_size == 'От 10 м²' %}
-                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink">
+                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
                                         <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                             <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
                                             <span class="fs_24">№{{ box.name }}</span>
@@ -439,6 +449,17 @@
 	itemsToggle.addEventListener('change', () => {
 	  itemsField.style.display = itemsToggle.checked ? 'block' : 'none';
 	});
+	
+</script>
+<script>
+	const boxLinks = document.querySelectorAll('.SelfStorage__boxlink');
+boxLinks.forEach(el => {
+    el.addEventListener('click', function(e) {
+        e.preventDefault();
+        const boxName = el.dataset.boxName; 
+        document.getElementById('selectedBox').value = boxName; 
+    });
+});
 </script>
 </body>
 </html>

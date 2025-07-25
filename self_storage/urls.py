@@ -32,6 +32,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('promo/<slug:slug>/', tracked_redirect, name='tracked_redirect'),
     path('qr_code/', views.qr_code, name='qr_code'),
+    path('create_order', views.create_order, name='create_order')
 ]
 
 
