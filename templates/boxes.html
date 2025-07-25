@@ -114,7 +114,7 @@
 	  
 			<span class="text-center fw-light d-block mt-3">
 			  Нажимая на кнопку, вы подтверждаете свое 
-			  <a href="#" class="link-dark">согласие на обработку персональных данных</a>
+			  <a href="{% static 'docs/personal_data_policy.pdf' %}" target="_blank" class="link-dark">согласие на обработку персональных данных</a>
 			</span>
 		  </form>
 		</div>
@@ -172,10 +172,10 @@
                     <h1 class="text-center mb-4 fw-bold">{{ warehouse.city }}, {{ warehouse.address }}</h1>
                     <div class="row d-flex flex-column mb-5">
                         <div class="col-12 col-sm-6 col-lg-4 d-flex justify-content-between align-self-center">
-                            <a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Контакты" data-bs-content="{{ warehouse.contacts }}">
+                            <a type="button" tabindex="0" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Контакты" data-bs-content="{{ warehouse.contacts }}">
                                 Контакты
                             </a>
-                            <a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Описание" data-bs-content="{{ warehouse.description }}">
+                            <a type="button" tabindex="0" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Описание" data-bs-content="{{ warehouse.description }}">
                                 Описание
                             </a>
                         </div>
@@ -421,12 +421,7 @@
 	</div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script>
-    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl);
-    });
-</script>
+<script src="{% static 'js/popovers.js' %}"></script>
 <script>
 	const courierToggle = document.getElementById('courierToggle');
 	const addressField = document.getElementById('addressField');
