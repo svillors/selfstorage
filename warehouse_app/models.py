@@ -203,6 +203,15 @@ class Order(models.Model):
         upload_to='qr_codes',
         blank=True
     )
+    address = models.CharField(
+        'Адрес приёма вещей',
+        max_length=70,
+        blank=True
+    )
+    items = models.TextField(
+        'Предметы',
+        blank=True
+    )
 
     def __str__(self):
         return f'Заказ на {self.box} от {self.customer}'
