@@ -110,9 +110,12 @@ def profile_view(request):
     else:
         form = ProfileForm(instance=profile)
 
+    orders = Order.objects.filter(customer=user).select_related('box__warehouse')
+
     return render(request, 'my-rent.html', {
         'user': user,
         'profile': form,
+        'orders': orders,
         })
 
 
