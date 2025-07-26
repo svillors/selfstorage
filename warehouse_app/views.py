@@ -131,8 +131,8 @@ def create_order(request):
     phone = request.POST.get('phone')
     selected_box = request.POST.get('selected_box')
     box = Box.objects.filter(name=selected_box).first()
-    address = request.POST.get('address') or None
-    items = request.POST.get('items') or None
+    address = request.POST.get('address') if request.POST.get('address') else ''
+    items = request.POST.get('items') if request.POST.get('items') else ''
 
     rental_period = int(request.POST.get('rental_period', 1))
     date_end = now().date() + relativedelta(months=rental_period)
@@ -145,6 +145,8 @@ def create_order(request):
         date_end=date_end,
         phone=phone
     )
+    box.is_busy = True
+    box.save
 
     return redirect('index')
 
