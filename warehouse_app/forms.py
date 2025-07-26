@@ -19,7 +19,7 @@ class RegisterForm(UserCreationForm):
         max_length=20,
         required=True,
         label='Телефон',
-        validators=[RegexValidator(r'^\+?\d{10,15}$', message='Введите корректный номер телефона')],
+        validators=[RegexValidator(r'^(\+?7|8)\d{10}$', message='Введите номер в формате +7XXXXXXXXXX, 7XXXXXXXXXX или 8XXXXXXXXXX')],
         widget=forms.TextInput(attrs={
             'class': 'form-control border-8 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
             'placeholder': 'Телефон'
