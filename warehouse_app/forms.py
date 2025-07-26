@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Profile
+from django.core.validators import RegexValidator
 
 
 class RegisterForm(UserCreationForm):
@@ -13,6 +14,18 @@ class RegisterForm(UserCreationForm):
         'class': 'form-control border-8 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
         'placeholder': 'Имя пользователя'
     }))
+
+    phone = forms.CharField(
+        max_length=20,
+        required=True,
+        label='Телефон',
+        validators=[RegexValidator(r'^\+?\d{10,15}$', message='Введите корректный номер телефона')],
+        widget=forms.TextInput(attrs={
+            'class': 'form-control border-8 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Телефон'
+        })
+    )
+
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control border-8 py-3 px-5 fs_24 SelfStorage__bg_lightgrey',
         'placeholder': 'Пароль'
@@ -24,7 +37,15 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'password1', 'password2']
+        fields = ['email', 'username', 'phone', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit)
+        phone = self.cleaned_data.get('phone')
+        if commit:
+            user.profile.phone = phone
+            user.profile.save()
+        return user
 
 
 class LoginForm(forms.Form):
