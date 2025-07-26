@@ -3,6 +3,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from dateutil.relativedelta import relativedelta
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 from warehouse_app.models import Warehouse, Profile, Order, Box
@@ -47,10 +49,12 @@ def boxes(request):
     warehouses = Warehouse.objects.prefetch_related('boxes').all()
     show_login_modal = request.session.pop('show_login_modal_boxes', False)
     login_required_message = request.session.pop('login_required_message', None)
+    error_messages = request.session.pop('error_messages', None)
     return render(request, 'boxes.html', {
         'warehouses': warehouses,
         'show_login_modal_boxes': show_login_modal,
-        'login_required_message': login_required_message
+        'login_required_message': login_required_message,
+        'error_messages': error_messages
     })
 
 
@@ -135,15 +139,37 @@ def create_order(request):
     if request.method == 'POST':
         if not request.user.is_authenticated:
             request.session['login_required_message'] = "Это действие требует входа в аккаунт"
-            request.session['show_login_modal_boxes'] = True
+            request.session['show_login_modadsl_boxes'] = True
             return redirect('boxes')
 
+        error_messages = []
+
+        phone_validator = RegexValidator(regex=r'^(\+?7|8)\d{10}$')
+
         user = request.user
-        phone = request.POST.get('phone')
+        try:
+            phone = request.POST.get('phone')
+            phone_validator(phone)
+        except ValidationError:
+            error_messages.append(
+                'Неправильно введён номер телефона, допустимые' \
+                ' форматы: +7XXXXXXXXXX, 7XXXXXXXXXX или 8XXXXXXXXXX'
+            )
+
         selected_box = request.POST.get('selected_box')
         box = Box.objects.filter(name=selected_box).first()
-        address = request.POST.get('address') if request.POST.get('address') else ''
-        items = request.POST.get('items') if request.POST.get('items') else ''
+        if not box:
+            error_messages.append('Вы не выбрали бокс для аренды')
+        if box and box.is_busy:
+            error_messages.append('Выбранный бокс уже занят. ' \
+                                  'Пожалуйста, выберите другой.')
+        if error_messages:
+            request.session['error_messages'] = error_messages
+            return redirect('boxes')
+
+        comment = request.POST.get('comment', '')
+        address = request.POST.get('address', '')
+        items = request.POST.get('items', '')
 
         rental_period = int(request.POST.get('rental_period', 1))
         date_end = now().date() + relativedelta(months=rental_period)
@@ -154,7 +180,8 @@ def create_order(request):
             address=address,
             items=items,
             date_end=date_end,
-            phone=phone
+            phone=phone,
+            comment=comment
         )
         box.is_busy = True
         box.save()

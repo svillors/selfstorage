@@ -86,7 +86,16 @@
 						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
 					</div>
 				{% endif %}
-			  
+			  {% if error_messages %}
+				<div class="mb-4">
+				  {% for message in error_messages %}
+					<div class="alert alert-danger alert-dismissible fade show fs_20" role="alert">
+					  {{ message }}
+					  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+					</div>
+				  {% endfor %}
+				</div>
+			  {% endif %}
 			  <label for="phone" class="form-label fs_20">Номер телефона</label>
 			  <input type="tel" required name="phone" class="form-control border-8 mb-4 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Укажите ваш номер телефона" required value="{{ request.user.profile.phone }}">
 			  
