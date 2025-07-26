@@ -146,7 +146,7 @@ def create_order(request):
         phone=phone
     )
     box.is_busy = True
-    box.save
+    box.save()
 
     return redirect('index')
 
