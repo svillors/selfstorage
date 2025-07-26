@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from dateutil.relativedelta import relativedelta
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -146,3 +147,15 @@ def create_order(request):
     )
 
     return redirect('index')
+
+
+@login_required
+def extend_order(request, order_id):
+    if request.method == 'POST':
+        months = int(request.POST.get('extension'))
+        order = get_object_or_404(Order, id=order_id, customer=request.user)
+        order.date_end += relativedelta(months=months)
+        order.save()
+
+        messages.success(request, f"Аренда продлена на {months} мес.")
+        return redirect('my-rent')

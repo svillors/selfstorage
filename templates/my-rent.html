@@ -139,7 +139,17 @@
                                     <h4 class="SelfStorage_green">Список вещей</h4>
                                     <h4>{{ order.items }}</h4>
                                 {% endif %}
-						        <div><button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Продлить аренду</button></div>
+						        <form method="post" action="{% url 'extend_order' order.id %}" class="mb-3">
+                                    {% csrf_token %}
+                                    <select name="extension" class="btn fs_24 px-4 py-2 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green">
+                                        <option value="1">1 месяц</option>
+                                        <option value="6">6 месяцев</option>
+                                        <option value="12">1 год</option>
+                                    </select>
+                                    <button type="submit" class="btn fs_24 px-4 py-2 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green">
+                                        Продлить аренду
+                                    </button>
+                                </form>
 						        <div>
                                     <button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange mb-3"
                                     onclick="document.getElementById('qr-{{ order.id }}').classList.toggle('d-none')">
@@ -169,6 +179,20 @@
 			</div>
 		</div>
 	</div>
+    {% if messages %}
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            {% for message in messages %}
+                <div class="toast align-items-center text-white bg-success border-0 show" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </main>
 <footer class="container py-5">
 	<div class="row mb-5">
@@ -224,5 +248,11 @@
   });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script>
+  var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+  var toastList = toastElList.map(function (toastEl) {
+    return new bootstrap.Toast(toastEl)
+  })
+</script>
 </body>
 </html>
