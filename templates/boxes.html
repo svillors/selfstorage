@@ -275,23 +275,25 @@
 							 id="pills-all-{{ warehouse.id }}" 
 							 role="tabpanel" aria-labelledby="pills-all-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
-                                <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
-                                    <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
-                                        <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
-                                        <span class="fs_24">№{{ box.name }}</span>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
-                                        <span class="fs_24">{{ box.size }} м²</span>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
-                                        <span class="fs_24">{{ box.length }} × {{ box.width }} × {{ box.height }} м</span>
-                                    </div>
-                                    <div class="col-12 col-lg-3">
-                                        <span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8">
-                                            {{ box.price }} ₽/мес
-                                        </span>
-                                    </div>
-                                </a>
+                                {% if not box.is_busy %}
+									<a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
+										<div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
+											<span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
+											<span class="fs_24">№{{ box.name }}</span>
+										</div>
+										<div class="col-6 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
+											<span class="fs_24">{{ box.size }} м²</span>
+										</div>
+										<div class="col-6 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
+											<span class="fs_24">{{ box.length }} × {{ box.width }} × {{ box.height }} м</span>
+										</div>
+										<div class="col-12 col-lg-3">
+											<span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8">
+												{{ box.price }} ₽/мес
+											</span>
+										</div>
+									</a>
+								{% endif %}
                             {% empty %}
                                 <div class="text-center fs_24 py-5">Нет доступных боксов</div>
                             {% endfor %}
@@ -301,7 +303,7 @@
 							id="pills-to3-{{ warehouse.id }}" 
 							role="tabpanel" aria-labelledby="pills-to3-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
-                                {% if box.box_size == 'До 3 м²' %}
+                                {% if box.box_size == 'До 3 м²' and not box.is_busy %}
                                     <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
                                         <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                             <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
@@ -329,7 +331,7 @@
 						id="pills-to10-{{ warehouse.id }}" 
 						role="tabpanel" aria-labelledby="pills-to10-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
-                                {% if box.box_size == 'До 10 м²' %}
+                                {% if box.box_size == 'До 10 м²' and not box.is_busy %}
                                     <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
                                         <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                             <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
@@ -357,7 +359,7 @@
 							id="pills-from10-{{ warehouse.id }}" 
 							role="tabpanel" aria-labelledby="pills-from10-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
-                                {% if box.box_size == 'От 10 м²' %}
+                                {% if box.box_size == 'От 10 м²' and not box.is_busy %}
                                     <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
                                         <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                             <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
