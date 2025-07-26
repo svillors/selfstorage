@@ -217,6 +217,10 @@ class Order(models.Model):
         blank=True,
         max_length=30
     )
+    comment = models.TextField(
+        'Комментарий к заказу',
+        blank=True
+    )
 
     def __str__(self):
         return f'Заказ на {self.box} от {self.customer}'
@@ -261,20 +265,3 @@ class Stuff(models.Model):
     class Meta:
         verbose_name = 'Вещь'
         verbose_name_plural = 'Вещи'
-
-
-class Promo(models.Model):
-    code = models.CharField(
-        'Промокод',
-        max_length=10,
-    )
-    discount = PositiveSmallIntegerField(
-        'Размер скидки'
-    )
-
-    def __str__(self):
-        return f'{self.code}, {self.discount}'
-
-    class Meta:
-        verbose_name = 'Промокод'
-        verbose_name_plural = 'Промокоды'

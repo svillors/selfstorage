@@ -20,3 +20,20 @@ class TrackedLink(models.Model):
     class Meta:
         verbose_name = 'Отслеживаемая ссылка'
         verbose_name_plural = 'Отслеживаемые ссылки'
+
+
+class Promo(models.Model):
+    code = models.CharField(
+        'Промокод',
+        max_length=10,
+    )
+    discount = models.PositiveSmallIntegerField(
+        'Размер скидки'
+    )
+
+    def __str__(self):
+        return f'{self.code}, {self.discount}'
+
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'
