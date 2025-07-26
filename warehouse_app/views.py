@@ -45,7 +45,13 @@ def faq(request):
 
 def boxes(request):
     warehouses = Warehouse.objects.prefetch_related('boxes').all()
-    return render(request, 'boxes.html', {'warehouses': warehouses})
+    show_login_modal = request.session.pop('show_login_modal_boxes', False)
+    login_required_message = request.session.pop('login_required_message', None)
+    return render(request, 'boxes.html', {
+        'warehouses': warehouses,
+        'show_login_modal_boxes': show_login_modal,
+        'login_required_message': login_required_message
+    })
 
 
 def register_view(request):
@@ -126,27 +132,32 @@ def qr_code(request):
 
 
 def create_order(request):
-    email = request.POST.get('email')
-    user = User.objects.get(email=email)
-    phone = request.POST.get('phone')
-    selected_box = request.POST.get('selected_box')
-    box = Box.objects.filter(name=selected_box).first()
-    address = request.POST.get('address') if request.POST.get('address') else ''
-    items = request.POST.get('items') if request.POST.get('items') else ''
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            request.session['login_required_message'] = "Это действие требует входа в аккаунт"
+            request.session['show_login_modal_boxes'] = True
+            return redirect('boxes')
 
-    rental_period = int(request.POST.get('rental_period', 1))
-    date_end = now().date() + relativedelta(months=rental_period)
+        user = request.user
+        phone = request.POST.get('phone')
+        selected_box = request.POST.get('selected_box')
+        box = Box.objects.filter(name=selected_box).first()
+        address = request.POST.get('address') if request.POST.get('address') else ''
+        items = request.POST.get('items') if request.POST.get('items') else ''
 
-    Order.objects.create(
-        customer=user,
-        box=box,
-        address=address,
-        items=items,
-        date_end=date_end,
-        phone=phone
-    )
-    box.is_busy = True
-    box.save()
+        rental_period = int(request.POST.get('rental_period', 1))
+        date_end = now().date() + relativedelta(months=rental_period)
+
+        Order.objects.create(
+            customer=user,
+            box=box,
+            address=address,
+            items=items,
+            date_end=date_end,
+            phone=phone
+        )
+        box.is_busy = True
+        box.save()
 
     return redirect('index')
 
