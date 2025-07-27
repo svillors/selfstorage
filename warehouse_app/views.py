@@ -184,6 +184,13 @@ def create_order(request):
         address = request.POST.get('address', '')
         items = request.POST.get('items', '')
 
+        promo_code_input = request.POST.get('promo_code', '').strip().upper()
+        promocode = (
+            Promo.objects.filter(code=promo_code_input).first()
+            if promo_code_input
+            else None
+        )
+
         rental_period = int(request.POST.get('rental_period', 1))
         date_end = now().date() + relativedelta(months=rental_period)
 
@@ -194,7 +201,8 @@ def create_order(request):
             items=items,
             date_end=date_end,
             phone=phone,
-            comment=comment
+            comment=comment,
+            promocode=promocode
         )
         box.is_busy = True
         box.save()

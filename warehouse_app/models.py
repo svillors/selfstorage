@@ -225,6 +225,14 @@ class Order(models.Model):
         'Комментарий к заказу',
         blank=True
     )
+    promocode = models.ForeignKey(
+        'promo.Promo',
+        verbose_name='Промокод',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='orders'
+    )
 
     def __str__(self):
         return f'Заказ на {self.box} от {self.customer}'
@@ -234,7 +242,6 @@ class Order(models.Model):
         today = now().date()
         delta = self.date_end - today
         return delta
-
 
     def save(self, *args, **kwargs):
         random_text = ''.join([random.choice(string.ascii_letters + string.digits)
