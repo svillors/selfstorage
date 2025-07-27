@@ -7,3 +7,5 @@ class WarehouseAppConfig(AppConfig):
 
     def ready(self):
         import warehouse_app.signals
+        import warehouse_app.scheduler
+        warehouse_app.scheduler.start()
