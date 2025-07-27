@@ -38,7 +38,7 @@
 		<div class="collapse navbar-collapse justify-content-end" id="navbar">
 			<ul class="navbar-nav">
 				<li class="nav-item me-5">
-					<a class="nav-link SelfStorage_black" href="#">Рассчитать стоимость</a>
+					<a class="nav-link SelfStorage_black" href="#contactMe">Свяжитесь со мной</a>
 				</li>
 				<li class="nav-item me-5">
 					<a class="nav-link SelfStorage_black" href="{% url 'faq' %}">Правила хранения</a>
@@ -87,7 +87,7 @@
             {% endfor %}
         </div>
     {% endif %}
-	<article class="row">
+	<article class="row" id="contactMe">
 		<div class="col-12 col-lg-6 mb-3 mb-lg-0">
 			<h1 class="fw-bold SelfStorage_green mb-5">Доставка и бережное хранение ваших вещей</h1>
 			<h4 class="fw-lighter SelfStorage_grey mb-5">Аренда бокса на любой срок Бесплатная доставка от вашего дома </h4>
@@ -95,7 +95,7 @@
                 {% csrf_token %}
                 {{ callback_form.email }}
                 <button type="submit" class="btn border-8 py-3 px-5 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">
-                    Рассчитать стоимость
+                    Свяжитесь со мной
                 </button>
                 <span class="text-center fw-light">Нажимая на кнопку, вы подтверждаете свое <a href="{% static 'docs/personal_data_policy.pdf' %}" target="_blank" class="link-dark">согласие на обработку персональных данных</a></span>
             </form>

@@ -184,7 +184,7 @@ def create_order(request):
         address = request.POST.get('address', '')
         items = request.POST.get('items', '')
 
-        promo_code_input = request.POST.get('promo_code', '').strip().upper()
+        promo_code_input = request.POST.get('promo_code', '').strip()
         promocode = (
             Promo.objects.filter(code=promo_code_input).first()
             if promo_code_input
@@ -207,7 +207,9 @@ def create_order(request):
         box.is_busy = True
         box.save()
 
-    return redirect('index')
+        messages.success(request, 'Заказ успешно создан')
+
+        return redirect('index')
 
 
 @login_required

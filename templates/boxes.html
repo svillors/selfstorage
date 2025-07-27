@@ -38,7 +38,7 @@
 		<div class="collapse navbar-collapse justify-content-end" id="navbar">
 			<ul class="navbar-nav">
 				<li class="nav-item me-5">
-					<a class="nav-link SelfStorage_black" href="#">Рассчитать стоимость</a>
+					<a class="nav-link SelfStorage_black" href="{% url 'index' %}#contactMe">Свяжитесь со мной</a>
 				</li>
 				<li class="nav-item me-5">
 					<a class="nav-link SelfStorage_black" href="{% url 'faq' %}">Правила хранения</a>
@@ -256,9 +256,9 @@
                                     <a href="#pills-tabContent-{{ warehouse.id }}" role="button" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">
                                         Арендовать бокс
                                     </a>
-                                    <button class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange">
-                                        Позвонить мне
-                                    </button>
+									<a href="{% url 'index' %}#contactMe" role="button" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange">
+                                        Свяжитесь со мной
+									</a>
                                 </div>
 
                                 <a href="#" class="text-center text-lg-start mt-4 SelfStorage_orange">Нужна помощь?</a>
