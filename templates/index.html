@@ -73,15 +73,32 @@
 	</nav>
 </header>
 <main class="container mt-header">
+    {% if messages %}
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            {% for message in messages %}
+                <div class="toast align-items-center text-white bg-success border-0 show" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 	<article class="row">
 		<div class="col-12 col-lg-6 mb-3 mb-lg-0">
 			<h1 class="fw-bold SelfStorage_green mb-5">Доставка и бережное хранение ваших вещей</h1>
 			<h4 class="fw-lighter SelfStorage_grey mb-5">Аренда бокса на любой срок Бесплатная доставка от вашего дома </h4>
-			<form class="">
-				<input type="text" required name="EMAIL1" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail">
-				<button class="btn border-8 py-3 px-5 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Рассчитать стоимость</button>
-				<span class="text-center fw-light">Нажимая на кнопку, вы подтверждаете свое <a href="{% static 'docs/personal_data_policy.pdf' %}" target="_blank" class="link-dark">согласие на обработку персональных данных</a></span>
-			</form>
+            <form method="post">
+                {% csrf_token %}
+                {{ callback_form.email }}
+                <button type="submit" class="btn border-8 py-3 px-5 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">
+                    Рассчитать стоимость
+                </button>
+                <span class="text-center fw-light">Нажимая на кнопку, вы подтверждаете свое <a href="{% static 'docs/personal_data_policy.pdf' %}" target="_blank" class="link-dark">согласие на обработку персональных данных</a></span>
+            </form>
 		</div>
 		<div class="col-12 col-lg-6 SelfStorage__img"></div>
 	</article>
@@ -332,5 +349,13 @@
 	</div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    toastElList.map(function (toastEl) {
+      return new bootstrap.Toast(toastEl).show()
+    })
+  });
+</script>
 </body>
 </html>

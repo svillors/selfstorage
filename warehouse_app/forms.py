@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, CallbackRequest
 from django.core.validators import RegexValidator
 
 
@@ -67,4 +67,16 @@ class ProfileForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control fs_24 ps-2 SelfStorage__input'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control fs_24 ps-2 SelfStorage__input'}),
             'phone': forms.TextInput(attrs={'class': 'form-control fs_24 ps-2 SelfStorage__input'}),
+        }
+
+
+class CallbackRequestForm(forms.ModelForm):
+    class Meta:
+        model = CallbackRequest
+        fields = ['email']
+        widgets = {
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+                'placeholder': 'Укажите ваш e-mail'
+            })
         }

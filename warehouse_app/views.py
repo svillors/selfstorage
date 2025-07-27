@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 from warehouse_app.models import Warehouse, Profile, Order, Box
-from .forms import RegisterForm, LoginForm, ProfileForm
+from .forms import RegisterForm, LoginForm, ProfileForm, CallbackRequestForm
 
 
 def index(request):
@@ -33,9 +33,19 @@ def index(request):
     show_login_modal = request.session.pop('show_login_modal', False)
     show_reg_modal = request.session.pop('show_reg_modal', False)
 
+    if request.method == 'POST':
+        callback_form = CallbackRequestForm(request.POST)
+        if callback_form.is_valid():
+            callback_form.save()
+            messages.success(request, "Заявка отправлена! Мы свяжемся с вами в ближайшее время.")
+            return redirect('index')
+    else:
+        callback_form = CallbackRequestForm()
+
     return render(request, 'index.html', {
         'login_form': login_form,
         'register_form': register_form,
+        'callback_form': callback_form,
         'show_login_modal': show_login_modal,
         'show_reg_modal': show_reg_modal
     })
