@@ -24,6 +24,10 @@ class Profile(models.Model):
     def __str__(self):
         return f'Профиль {self.user.username}'
 
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'
+
 
 def get_directory_path(instance, filename):
     return PurePath(f'{instance.city}', f'{filename}')
@@ -265,3 +269,15 @@ class Stuff(models.Model):
     class Meta:
         verbose_name = 'Вещь'
         verbose_name_plural = 'Вещи'
+
+
+class CallbackRequest(models.Model):
+    email = models.EmailField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Заявка от {self.email} ({self.created_at:%Y-%m-%d %H:%M})"
+
+    class Meta:
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
