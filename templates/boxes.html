@@ -132,6 +132,14 @@
 				<textarea name="items" class="form-control border-8 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" rows="3" placeholder="Перечислите вещи, которые будут храниться"></textarea>
 			</div>
 
+			<div class="form-check form-switch mb-3 d-flex align-items-center gap-3">
+				<input class="form-check-input" type="checkbox" id="promoToggle" role="switch" style="width: 3rem; height: 1.5rem;">
+				<label class="form-check-label fs_20" for="promoToggle">У меня есть промокод</label>
+			  </div>
+			  
+			  <div id="promoField" class="mb-4" style="display: none;">
+				<input type="text" name="promo_code" class="form-control border-8 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Введите промокод">
+			  </div>			  
 
 			<div class="form-check form-switch mb-3 d-flex align-items-center gap-3">
 				<input class="form-check-input" type="checkbox" id="commentToggle" role="switch" style="width: 3rem; height: 1.5rem;">
@@ -507,5 +515,19 @@ boxLinks.forEach(el => {
   });
 </script>
 {% endif %}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+	  const promoToggle = document.getElementById('promoToggle');
+	  const promoField = document.getElementById('promoField');
+  
+	  promoToggle.addEventListener('change', function () {
+		if (promoToggle.checked) {
+		  promoField.style.display = 'block';
+		} else {
+		  promoField.style.display = 'none';
+		}
+	  });
+	});
+</script>
 </body>
 </html>
