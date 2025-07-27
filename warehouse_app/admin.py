@@ -1,5 +1,5 @@
 from django.contrib import admin
-from warehouse_app.models import Warehouse, Box, Order, Stuff, Courier, Profile
+from warehouse_app.models import Warehouse, Box, Order, Stuff, Courier, Profile, CallbackRequest
 
 
 class BoxesInline(admin.TabularInline):
@@ -59,3 +59,8 @@ class CourierAdmin(admin.ModelAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user']
+
+
+@admin.register(CallbackRequest)
+class CallbackRequestAdmin(admin.ModelAdmin):
+    list_display = ('email', 'created_at')
