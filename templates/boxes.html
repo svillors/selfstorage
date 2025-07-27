@@ -107,7 +107,7 @@
 
 			  <div class="mb-4">
 				<label for="rentalPeriod" class="form-label fs_20">Срок аренды</label>
-				<select id="rentalPeriod" name="rental_period" class="form-select border-8 py-3 px-4 border-0 fs_20 SelfStorage__bg_lightgrey">
+				<select id="rentalDuration" name="rental_period" class="form-select border-8 py-3 px-4 border-0 fs_20 SelfStorage__bg_lightgrey">
 				  <option value="1">1 месяц</option>
 				  <option value="6">6 месяцев</option>
 				  <option value="12">1 год</option>
@@ -138,7 +138,8 @@
 			  </div>
 			  
 			  <div id="promoField" class="mb-4" style="display: none;">
-				<input type="text" name="promo_code" class="form-control border-8 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Введите промокод">
+				<input type="text" id="promoCode" name="promo_code" class="form-control border-8 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" placeholder="Введите промокод">
+				<small id="promoError" class="text-danger" style="display: none;">Промокод не найден</small>
 			  </div>			  
 
 			<div class="form-check form-switch mb-3 d-flex align-items-center gap-3">
@@ -150,10 +151,11 @@
 				<textarea name="comment" class="form-control border-8 py-2 px-4 border-0 fs_20 SelfStorage__bg_lightgrey" rows="3" placeholder="Добавьте комментарий к заказу"></textarea>
 			</div>
 
-			
+			<span id="totalPrice" class="text-center fs_24 mb-4 py-3 px-4 rounded-4 SelfStorage__bg_lightgrey fw-semibold text-dark border border-2 border-secondary-subtle" style="display: none;"></span>
 			<button type="submit" class="btn border-8 py-3 px-5 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">
 			  Арендовать склад
 			</button>
+			
 	  
 			<span class="text-center fw-light d-block mt-3">
 			  Нажимая на кнопку, вы подтверждаете свое 
@@ -309,7 +311,7 @@
 							 role="tabpanel" aria-labelledby="pills-all-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
                                 {% if not box.is_busy %}
-									<a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
+									<a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}" data-box-price="{{ box.price }}">
 										<div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
 											<span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
 											<span class="fs_24">№{{ box.name }}</span>
@@ -337,7 +339,7 @@
 							role="tabpanel" aria-labelledby="pills-to3-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
                                 {% if box.box_size == 'До 3 м²' and not box.is_busy %}
-                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
+                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}" data-box-price="{{ box.price }}">
                                         <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                             <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
                                             <span class="fs_24">№{{ box.name }}</span>
@@ -365,7 +367,7 @@
 						role="tabpanel" aria-labelledby="pills-to10-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
                                 {% if box.box_size == 'До 10 м²' and not box.is_busy %}
-                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
+                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}" data-box-price="{{ box.price }}">
                                         <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                             <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
                                             <span class="fs_24">№{{ box.name }}</span>
@@ -393,7 +395,7 @@
 							role="tabpanel" aria-labelledby="pills-from10-tab-{{ warehouse.id }}">
                             {% for box in warehouse.boxes.all %}
                                 {% if box.box_size == 'От 10 м²' and not box.is_busy %}
-                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}">
+                                    <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-box-name="{{ box.name }}" data-box-price="{{ box.price }}">
                                         <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
                                             <span class="SelfStorage_green fs_24 me-2">{{ box.floor }} эт.</span>
                                             <span class="fs_24">№{{ box.name }}</span>
@@ -470,64 +472,86 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="{% static 'js/popovers.js' %}"></script>
 <script>
+	const selectBoxInput = document.getElementById('selectedBox');
+	if (selectBoxInput) {
+		selectBoxInput.addEventListener('click', () => {
+			document.getElementById('BOX').scrollIntoView({ behavior: 'smooth' });
+		});
+	}
+
 	const courierToggle = document.getElementById('courierToggle');
 	const addressField = document.getElementById('addressField');
-  
 	courierToggle.addEventListener('change', () => {
-	  addressField.style.display = courierToggle.checked ? 'block' : 'none';
+		addressField.style.display = courierToggle.checked ? 'block' : 'none';
 	});
-</script>
-<script>
+	
 	const itemsToggle = document.getElementById('itemsToggle');
 	const itemsField = document.getElementById('itemsField');
-  
 	itemsToggle.addEventListener('change', () => {
-	  itemsField.style.display = itemsToggle.checked ? 'block' : 'none';
+		itemsField.style.display = itemsToggle.checked ? 'block' : 'none';
 	});
-</script>
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-	  const commentToggle = document.getElementById('commentToggle');
-	  const commentField = document.getElementById('commentField');
 	
-	  if (commentToggle) {
-		commentToggle.addEventListener('change', function () {
-		  commentField.style.display = this.checked ? 'block' : 'none';
-		});
-	  }
+	const commentToggle = document.getElementById('commentToggle');
+	const commentField = document.getElementById('commentField');
+	commentToggle.addEventListener('change', () => {
+		commentField.style.display = commentToggle.checked ? 'block' : 'none';
 	});
-</script>
-<script>
-	const boxLinks = document.querySelectorAll('.SelfStorage__boxlink');
-boxLinks.forEach(el => {
-    el.addEventListener('click', function(e) {
-        e.preventDefault();
-        const boxName = el.dataset.boxName; 
-        document.getElementById('selectedBox').value = boxName; 
-    });
-});
-</script>
-{% if show_login_modal_boxes %}
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const loginModal = new bootstrap.Modal(document.getElementById('SignModal'));
-    loginModal.show();
-  });
-</script>
-{% endif %}
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-	  const promoToggle = document.getElementById('promoToggle');
-	  const promoField = document.getElementById('promoField');
-  
-	  promoToggle.addEventListener('change', function () {
-		if (promoToggle.checked) {
-		  promoField.style.display = 'block';
+	
+	const promoToggle = document.getElementById('promoToggle');
+	const promoField = document.getElementById('promoField');
+	promoToggle.addEventListener('change', () => {
+		promoField.style.display = promoToggle.checked ? 'block' : 'none';
+	});
+	
+	const durationInput = document.getElementById('rentalDuration');
+	const promoInput = document.getElementById('promoCode');
+	const priceDisplay = document.getElementById('totalPrice');
+	const promoError = document.getElementById('promoError');
+	
+	const promoCodes = {
+	  {% for promo in promo_codes %}
+		"{{ promo.code|escapejs }}": {{ promo.discount }}{% if not forloop.last %},{% endif %}
+	  {% endfor %}
+	};
+
+	function updateTotalPrice() {
+		const duration = parseInt(durationInput.value) || 0;
+		const code = promoInput.value.trim().toLowerCase();
+		const discount = promoCodes[code] || 0;
+
+		if (code && !(code in promoCodes)) {
+			promoError.style.display = 'block';
 		} else {
-		  promoField.style.display = 'none';
+			promoError.style.display = 'none';
 		}
-	  });
+
+		if (window.selectedBoxPrice && duration) {
+			let total = window.selectedBoxPrice * duration;
+			total -= (total * discount / 100);
+			priceDisplay.innerText = `Итого: ${total.toFixed(2)} ₽`;
+
+			priceDisplay.style.display = 'block';
+		} else {
+			priceDisplay.innerText = '';
+			priceDisplay.style.display = 'none';
+		}
+	}
+
+
+	const boxLinks = document.querySelectorAll('.SelfStorage__boxlink');
+	boxLinks.forEach(el => {
+		el.addEventListener('click', function(e) {
+			e.preventDefault();
+			const boxName = el.dataset.boxName;
+			const boxPrice = parseFloat(el.dataset.boxPrice);
+			document.getElementById('selectedBox').value = boxName;
+			window.selectedBoxPrice = boxPrice;
+			updateTotalPrice();
+		});
 	});
+
+	durationInput.addEventListener('change', updateTotalPrice);
+	promoInput.addEventListener('input', updateTotalPrice);
 </script>
 </body>
 </html>

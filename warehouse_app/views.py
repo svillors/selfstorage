@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 from warehouse_app.models import Warehouse, Profile, Order, Box
+from promo.models import Promo
 from .forms import RegisterForm, LoginForm, ProfileForm, CallbackRequestForm
 
 
@@ -60,11 +61,13 @@ def boxes(request):
     show_login_modal = request.session.pop('show_login_modal_boxes', False)
     login_required_message = request.session.pop('login_required_message', None)
     error_messages = request.session.pop('error_messages', None)
+    promo_codes = list(Promo.objects.values('code', 'discount'))
     return render(request, 'boxes.html', {
         'warehouses': warehouses,
         'show_login_modal_boxes': show_login_modal,
         'login_required_message': login_required_message,
-        'error_messages': error_messages
+        'error_messages': error_messages,
+        'promo_codes': promo_codes
     })
 
 
