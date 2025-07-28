@@ -60,13 +60,6 @@ class Warehouse(models.Model):
         blank=True,
         null=True
     )
-    ceiling_height = models.DecimalField(
-        'Высота потолка',
-        max_digits=3,
-        decimal_places=1,
-        blank=True,
-        null=True
-    )
     image = models.ImageField(
         'Фото склада',
         upload_to=get_directory_path,
@@ -243,6 +236,10 @@ class Order(models.Model):
         delta = self.date_end - today
         return delta
 
+    @property
+    def is_expired(self):
+        return self.date_end < now().date()
+
     def save(self, *args, **kwargs):
         random_text = ''.join([random.choice(string.ascii_letters + string.digits)
                 for i in range(10)])
@@ -256,26 +253,6 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
-
-
-class Stuff(models.Model):
-    name = models.CharField(
-        'Наименование',
-        max_length=200,
-    )
-    order = models.ForeignKey(
-        Order,
-        verbose_name='Заказ',
-        related_name='stuffs',
-        on_delete=models.CASCADE
-    )
-
-    def __str__(self):
-        return f'Заказ {self.order}'
-
-    class Meta:
-        verbose_name = 'Вещь'
-        verbose_name_plural = 'Вещи'
 
 
 class CallbackRequest(models.Model):
